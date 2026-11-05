@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectroDoc.Api", "src\ElectroDoc.Api\ElectroDoc.Api.csproj", "{DA7E66BB-CC18-4B99-871F-E607F77960C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectroDoc.Data", "src\ElectroDoc.Data\ElectroDoc.Data.csproj", "{21D6F714-C556-40DF-B924-BAC45B23B7D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectroDoc.Tests", "tests\ElectroDoc.Tests\ElectroDoc.Tests.csproj", "{0095DA8A-5B7A-4F9C-88CE-E374BD7F34B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA7E66BB-CC18-4B99-871F-E607F77960C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA7E66BB-CC18-4B99-871F-E607F77960C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA7E66BB-CC18-4B99-871F-E607F77960C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA7E66BB-CC18-4B99-871F-E607F77960C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21D6F714-C556-40DF-B924-BAC45B23B7D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21D6F714-C556-40DF-B924-BAC45B23B7D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21D6F714-C556-40DF-B924-BAC45B23B7D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21D6F714-C556-40DF-B924-BAC45B23B7D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0095DA8A-5B7A-4F9C-88CE-E374BD7F34B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0095DA8A-5B7A-4F9C-88CE-E374BD7F34B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0095DA8A-5B7A-4F9C-88CE-E374BD7F34B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0095DA8A-5B7A-4F9C-88CE-E374BD7F34B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
