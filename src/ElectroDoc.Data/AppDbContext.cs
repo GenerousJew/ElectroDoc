@@ -12,5 +12,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<MembershipStatus> MembershipStatuses => Set<MembershipStatus>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-        => modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        => modelBuilder.HasPostgresExtension("citext").ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 }

@@ -7,7 +7,7 @@ builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("Default") ?? throw new InvalidOperationException("Connection 'Default' not found.");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
 
 var app = builder.Build();
 

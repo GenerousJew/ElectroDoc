@@ -9,7 +9,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
         b.ToTable("employee");
         b.Property(e => e.Name).HasMaxLength(200);
-        b.Property(e => e.Email).HasMaxLength(254);
+        b.Property(e => e.Email).HasColumnType("citext");
         b.Property(e => e.PasswordHash).HasMaxLength(120);
         b.Property(e => e.PhoneNumber).HasMaxLength(32);
         
