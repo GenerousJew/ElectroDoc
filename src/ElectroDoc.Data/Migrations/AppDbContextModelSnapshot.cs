@@ -32,45 +32,20 @@ namespace ElectroDoc.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("closed_at");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("name");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("integer")
-                        .HasColumnName("status_id");
-
                     b.HasKey("Id")
                         .HasName("pk_company");
 
-                    b.HasIndex("StatusId")
-                        .HasDatabaseName("ix_company_status_id");
-
                     b.ToTable("company", (string)null);
-                });
-
-            modelBuilder.Entity("ElectroDoc.Data.CompanyStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_company_status");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_company_status_name");
-
-                    b.ToTable("company_status", (string)null);
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.Employee", b =>
@@ -127,25 +102,15 @@ namespace ElectroDoc.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("employee_id");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("integer")
-                        .HasColumnName("status_id");
+                    b.Property<DateTime?>("LeftAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("left_at");
 
                     b.HasKey("Id")
                         .HasName("pk_membership");
 
                     b.HasIndex("EmployeeId")
                         .HasDatabaseName("ix_membership_employee_id");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_membership_role_id");
-
-                    b.HasIndex("StatusId")
-                        .HasDatabaseName("ix_membership_status_id");
 
                     b.HasIndex("CompanyId", "EmployeeId")
                         .IsUnique()
@@ -154,7 +119,26 @@ namespace ElectroDoc.Data.Migrations
                     b.ToTable("membership", (string)null);
                 });
 
-            modelBuilder.Entity("ElectroDoc.Data.MembershipRole", b =>
+            modelBuilder.Entity("ElectroDoc.Data.MembershipPermission", b =>
+                {
+                    b.Property<Guid>("MembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("membership_id");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission_id");
+
+                    b.HasKey("MembershipId", "PermissionId")
+                        .HasName("pk_membership_permission");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_membership_permission_permission_id");
+
+                    b.ToTable("membership_permission", (string)null);
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.Permission", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer")
@@ -162,52 +146,75 @@ namespace ElectroDoc.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_membership_role");
+                        .HasName("pk_permission");
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_membership_role_name");
+                        .HasDatabaseName("ix_permission_name");
 
-                    b.ToTable("membership_role", (string)null);
-                });
+                    b.ToTable("permission", (string)null);
 
-            modelBuilder.Entity("ElectroDoc.Data.MembershipStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_membership_status");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_membership_status_name");
-
-                    b.ToTable("membership_status", (string)null);
-                });
-
-            modelBuilder.Entity("ElectroDoc.Data.Company", b =>
-                {
-                    b.HasOne("ElectroDoc.Data.CompanyStatus", "Status")
-                        .WithMany("Companies")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_company_company_statuses_status_id");
-
-                    b.Navigation("Status");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "ManageMembers"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "ManageCompanySettings"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "CreateDocuments"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "PrivateDrafts"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ViewPrivateDrafts"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "ViewOthersDrafts"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "EditOthersDrafts"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "SendOthersDrafts"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "ViewOthersDocuments"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "SignDocuments"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "CancelDocuments"
+                        });
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.Membership", b =>
@@ -226,27 +233,30 @@ namespace ElectroDoc.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_membership_employee_employee_id");
 
-                    b.HasOne("ElectroDoc.Data.MembershipRole", "Role")
-                        .WithMany("Memberships")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_membership_membership_roles_role_id");
-
-                    b.HasOne("ElectroDoc.Data.MembershipStatus", "Status")
-                        .WithMany("Memberships")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_membership_membership_statuses_status_id");
-
                     b.Navigation("Company");
 
                     b.Navigation("Employee");
+                });
 
-                    b.Navigation("Role");
+            modelBuilder.Entity("ElectroDoc.Data.MembershipPermission", b =>
+                {
+                    b.HasOne("ElectroDoc.Data.Membership", "Membership")
+                        .WithMany("MembershipPermissions")
+                        .HasForeignKey("MembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_membership_permission_membership_membership_id");
 
-                    b.Navigation("Status");
+                    b.HasOne("ElectroDoc.Data.Permission", "Permission")
+                        .WithMany("MembershipPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_membership_permission_permissions_permission_id");
+
+                    b.Navigation("Membership");
+
+                    b.Navigation("Permission");
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.Company", b =>
@@ -254,24 +264,19 @@ namespace ElectroDoc.Data.Migrations
                     b.Navigation("Memberships");
                 });
 
-            modelBuilder.Entity("ElectroDoc.Data.CompanyStatus", b =>
-                {
-                    b.Navigation("Companies");
-                });
-
             modelBuilder.Entity("ElectroDoc.Data.Employee", b =>
                 {
                     b.Navigation("Memberships");
                 });
 
-            modelBuilder.Entity("ElectroDoc.Data.MembershipRole", b =>
+            modelBuilder.Entity("ElectroDoc.Data.Membership", b =>
                 {
-                    b.Navigation("Memberships");
+                    b.Navigation("MembershipPermissions");
                 });
 
-            modelBuilder.Entity("ElectroDoc.Data.MembershipStatus", b =>
+            modelBuilder.Entity("ElectroDoc.Data.Permission", b =>
                 {
-                    b.Navigation("Memberships");
+                    b.Navigation("MembershipPermissions");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,9 +9,5 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
     {
         b.ToTable("company");
         b.Property(e => e.Name).HasMaxLength(500);
-        b.HasOne(e => e.Status)
-            .WithMany(c => c.Companies)
-            .HasForeignKey(e => e.StatusId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

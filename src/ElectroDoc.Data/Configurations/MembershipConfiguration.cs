@@ -20,15 +20,5 @@ public class MembershipConfiguration : IEntityTypeConfiguration<Membership>
             .WithMany(c => c.Memberships)
             .HasForeignKey(e => e.EmployeeId)
             .OnDelete(DeleteBehavior.Restrict);
-        
-        b.HasOne(e => e.Role)
-            .WithMany(c => c.Memberships)
-            .HasForeignKey(e => e.RoleId)
-            .OnDelete(DeleteBehavior.Restrict);
-        
-        b.HasOne(e => e.Status)
-            .WithMany(c => c.Memberships)
-            .HasForeignKey(e => e.StatusId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

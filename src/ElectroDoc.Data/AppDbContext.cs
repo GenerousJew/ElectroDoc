@@ -7,9 +7,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Company> Companies => Set<Company>();
-    public DbSet<CompanyStatus> CompanyStatuses => Set<CompanyStatus>();
-    public DbSet<MembershipRole> MembershipRoles => Set<MembershipRole>();
-    public DbSet<MembershipStatus> MembershipStatuses => Set<MembershipStatus>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<MembershipPermission> MembershipPermissions => Set<MembershipPermission>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
         => modelBuilder.HasPostgresExtension("citext").ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
