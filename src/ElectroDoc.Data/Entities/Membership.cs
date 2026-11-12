@@ -13,4 +13,6 @@ public class Membership
     public DateTime? LeftAt { get; set; }
 
     public List<MembershipPermission> MembershipPermissions { get; set; } = [];
+    public List<Document> CreatedDocuments { get; set; } = [];
+    public List<Document> SentDocuments { get; set; } = [];
 }

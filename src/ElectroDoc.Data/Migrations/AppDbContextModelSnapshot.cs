@@ -48,6 +48,195 @@ namespace ElectroDoc.Data.Migrations
                     b.ToTable("company", (string)null);
                 });
 
+            modelBuilder.Entity("ElectroDoc.Data.Document", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AuthorMembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_membership_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("name");
+
+                    b.Property<int?>("RecipientCompanyId")
+                        .HasColumnType("integer")
+                        .HasColumnName("recipient_company_id");
+
+                    b.Property<Guid?>("SenderMembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sender_membership_id");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer")
+                        .HasColumnName("status_id");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("type_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_document");
+
+                    b.HasIndex("AuthorMembershipId")
+                        .HasDatabaseName("ix_document_author_membership_id");
+
+                    b.HasIndex("SenderMembershipId")
+                        .HasDatabaseName("ix_document_sender_membership_id");
+
+                    b.HasIndex("StatusId")
+                        .HasDatabaseName("ix_document_status_id");
+
+                    b.HasIndex("TypeId")
+                        .HasDatabaseName("ix_document_type_id");
+
+                    b.HasIndex("RecipientCompanyId", "StatusId")
+                        .HasDatabaseName("ix_document_recipient_company_id_status_id");
+
+                    b.ToTable("document", (string)null);
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("content_type");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("file_name");
+
+                    b.Property<string>("SHA256")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character(64)")
+                        .HasColumnName("sha256")
+                        .IsFixedLength();
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint")
+                        .HasColumnName("size");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("uploaded_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_document_file");
+
+                    b.ToTable("document_file", (string)null);
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_document_status");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_document_status_name");
+
+                    b.ToTable("document_status", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Draft"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Sent"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Signed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Rejected"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Cancelled"
+                        });
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_document_type");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_document_type_name");
+
+                    b.ToTable("document_type", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Invoice"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Act"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Waybill"
+                        });
+                });
+
             modelBuilder.Entity("ElectroDoc.Data.Employee", b =>
                 {
                     b.Property<Guid>("Id")
@@ -217,6 +406,64 @@ namespace ElectroDoc.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ElectroDoc.Data.Document", b =>
+                {
+                    b.HasOne("ElectroDoc.Data.Membership", "AuthorMembership")
+                        .WithMany("CreatedDocuments")
+                        .HasForeignKey("AuthorMembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_memberships_author_membership_id");
+
+                    b.HasOne("ElectroDoc.Data.Company", "RecipientCompany")
+                        .WithMany("ReceivedDocuments")
+                        .HasForeignKey("RecipientCompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_document_company_recipient_company_id");
+
+                    b.HasOne("ElectroDoc.Data.Membership", "SenderMembership")
+                        .WithMany("SentDocuments")
+                        .HasForeignKey("SenderMembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_document_memberships_sender_membership_id");
+
+                    b.HasOne("ElectroDoc.Data.DocumentStatus", "Status")
+                        .WithMany("Documents")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_document_statuses_status_id");
+
+                    b.HasOne("ElectroDoc.Data.DocumentType", "Type")
+                        .WithMany("Documents")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_document_types_type_id");
+
+                    b.Navigation("AuthorMembership");
+
+                    b.Navigation("RecipientCompany");
+
+                    b.Navigation("SenderMembership");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentFile", b =>
+                {
+                    b.HasOne("ElectroDoc.Data.Document", "Document")
+                        .WithOne("File")
+                        .HasForeignKey("ElectroDoc.Data.DocumentFile", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_file_document_id");
+
+                    b.Navigation("Document");
+                });
+
             modelBuilder.Entity("ElectroDoc.Data.Membership", b =>
                 {
                     b.HasOne("ElectroDoc.Data.Company", "Company")
@@ -262,6 +509,23 @@ namespace ElectroDoc.Data.Migrations
             modelBuilder.Entity("ElectroDoc.Data.Company", b =>
                 {
                     b.Navigation("Memberships");
+
+                    b.Navigation("ReceivedDocuments");
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.Document", b =>
+                {
+                    b.Navigation("File");
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentStatus", b =>
+                {
+                    b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentType", b =>
+                {
+                    b.Navigation("Documents");
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.Employee", b =>
@@ -271,7 +535,11 @@ namespace ElectroDoc.Data.Migrations
 
             modelBuilder.Entity("ElectroDoc.Data.Membership", b =>
                 {
+                    b.Navigation("CreatedDocuments");
+
                     b.Navigation("MembershipPermissions");
+
+                    b.Navigation("SentDocuments");
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.Permission", b =>

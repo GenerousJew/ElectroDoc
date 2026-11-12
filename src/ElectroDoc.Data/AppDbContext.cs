@@ -9,6 +9,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<MembershipPermission> MembershipPermissions => Set<MembershipPermission>();
+    public DbSet<Document> Documents => Set<Document>();
+    public DbSet<DocumentFile> DocumentFiles => Set<DocumentFile>();
+    public DbSet<DocumentStatus> DocumentStatuses => Set<DocumentStatus>();
+    public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
         => modelBuilder.HasPostgresExtension("citext").ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
