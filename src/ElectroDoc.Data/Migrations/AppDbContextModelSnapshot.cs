@@ -149,6 +149,97 @@ namespace ElectroDoc.Data.Migrations
                     b.ToTable("document_file", (string)null);
                 });
 
+            modelBuilder.Entity("ElectroDoc.Data.DocumentHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ActionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("action_id");
+
+                    b.Property<Guid>("ActorMembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actor_membership_id");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("document_id");
+
+                    b.Property<DateTime>("HappenedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("happened_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_document_history");
+
+                    b.HasIndex("ActionId")
+                        .HasDatabaseName("ix_document_history_action_id");
+
+                    b.HasIndex("ActorMembershipId")
+                        .HasDatabaseName("ix_document_history_actor_membership_id");
+
+                    b.HasIndex("DocumentId", "HappenedAt")
+                        .HasDatabaseName("ix_document_history_document_id_happened_at");
+
+                    b.ToTable("document_history", (string)null);
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentHistoryAction", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_document_history_action");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_document_history_action_name");
+
+                    b.ToTable("document_history_action", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Created"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Edited"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Sent"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Signed"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Rejected"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Cancelled"
+                        });
+                });
+
             modelBuilder.Entity("ElectroDoc.Data.DocumentStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -406,6 +497,98 @@ namespace ElectroDoc.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ElectroDoc.Data.PermissionHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ActorMembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actor_membership_id");
+
+                    b.Property<DateTime>("HappenedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("happened_at");
+
+                    b.Property<bool>("IsGranted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_granted");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission_id");
+
+                    b.Property<Guid>("TargetMembershipId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("target_membership_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_permission_history");
+
+                    b.HasIndex("ActorMembershipId")
+                        .HasDatabaseName("ix_permission_history_actor_membership_id");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_permission_history_permission_id");
+
+                    b.HasIndex("TargetMembershipId", "HappenedAt")
+                        .HasDatabaseName("ix_permission_history_target_membership_id_happened_at");
+
+                    b.ToTable("permission_history", (string)null);
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character(64)")
+                        .HasColumnName("hash")
+                        .IsFixedLength();
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("session_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_token");
+
+                    b.HasIndex("EmployeeId")
+                        .HasDatabaseName("ix_refresh_token_employee_id");
+
+                    b.HasIndex("Hash")
+                        .IsUnique()
+                        .HasDatabaseName("ix_refresh_token_hash");
+
+                    b.HasIndex("SessionId")
+                        .HasDatabaseName("ix_refresh_token_session_id");
+
+                    b.ToTable("refresh_token", (string)null);
+                });
+
             modelBuilder.Entity("ElectroDoc.Data.Document", b =>
                 {
                     b.HasOne("ElectroDoc.Data.Membership", "AuthorMembership")
@@ -464,6 +647,36 @@ namespace ElectroDoc.Data.Migrations
                     b.Navigation("Document");
                 });
 
+            modelBuilder.Entity("ElectroDoc.Data.DocumentHistory", b =>
+                {
+                    b.HasOne("ElectroDoc.Data.DocumentHistoryAction", "Action")
+                        .WithMany("DocumentHistory")
+                        .HasForeignKey("ActionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_history_document_history_action_action_id");
+
+                    b.HasOne("ElectroDoc.Data.Membership", "ActorMembership")
+                        .WithMany("ActedDocumentEvents")
+                        .HasForeignKey("ActorMembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_history_memberships_actor_membership_id");
+
+                    b.HasOne("ElectroDoc.Data.Document", "Document")
+                        .WithMany("DocumentHistory")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_document_history_document_document_id");
+
+                    b.Navigation("Action");
+
+                    b.Navigation("ActorMembership");
+
+                    b.Navigation("Document");
+                });
+
             modelBuilder.Entity("ElectroDoc.Data.Membership", b =>
                 {
                     b.HasOne("ElectroDoc.Data.Company", "Company")
@@ -506,6 +719,48 @@ namespace ElectroDoc.Data.Migrations
                     b.Navigation("Permission");
                 });
 
+            modelBuilder.Entity("ElectroDoc.Data.PermissionHistory", b =>
+                {
+                    b.HasOne("ElectroDoc.Data.Membership", "ActorMembership")
+                        .WithMany("PerformedPermissionChanges")
+                        .HasForeignKey("ActorMembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_permission_history_membership_actor_membership_id");
+
+                    b.HasOne("ElectroDoc.Data.Permission", "Permission")
+                        .WithMany("PermissionHistory")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_permission_history_permission_permission_id");
+
+                    b.HasOne("ElectroDoc.Data.Membership", "TargetMembership")
+                        .WithMany("AffectedPermissionChanges")
+                        .HasForeignKey("TargetMembershipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_permission_history_membership_target_membership_id");
+
+                    b.Navigation("ActorMembership");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("TargetMembership");
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.RefreshToken", b =>
+                {
+                    b.HasOne("ElectroDoc.Data.Employee", "Employee")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_token_employee_employee_id");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("ElectroDoc.Data.Company", b =>
                 {
                     b.Navigation("Memberships");
@@ -515,7 +770,14 @@ namespace ElectroDoc.Data.Migrations
 
             modelBuilder.Entity("ElectroDoc.Data.Document", b =>
                 {
+                    b.Navigation("DocumentHistory");
+
                     b.Navigation("File");
+                });
+
+            modelBuilder.Entity("ElectroDoc.Data.DocumentHistoryAction", b =>
+                {
+                    b.Navigation("DocumentHistory");
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.DocumentStatus", b =>
@@ -531,13 +793,21 @@ namespace ElectroDoc.Data.Migrations
             modelBuilder.Entity("ElectroDoc.Data.Employee", b =>
                 {
                     b.Navigation("Memberships");
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("ElectroDoc.Data.Membership", b =>
                 {
+                    b.Navigation("ActedDocumentEvents");
+
+                    b.Navigation("AffectedPermissionChanges");
+
                     b.Navigation("CreatedDocuments");
 
                     b.Navigation("MembershipPermissions");
+
+                    b.Navigation("PerformedPermissionChanges");
 
                     b.Navigation("SentDocuments");
                 });
@@ -545,6 +815,8 @@ namespace ElectroDoc.Data.Migrations
             modelBuilder.Entity("ElectroDoc.Data.Permission", b =>
                 {
                     b.Navigation("MembershipPermissions");
+
+                    b.Navigation("PermissionHistory");
                 });
 #pragma warning restore 612, 618
         }

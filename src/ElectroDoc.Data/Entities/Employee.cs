@@ -9,4 +9,5 @@ public class Employee
     public string? PhoneNumber { get; set; }
 
     public List<Membership> Memberships { get; set; } = [];
+    public List<RefreshToken>  RefreshTokens { get; set; } = [];
 }

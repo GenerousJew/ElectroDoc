@@ -13,6 +13,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<DocumentFile> DocumentFiles => Set<DocumentFile>();
     public DbSet<DocumentStatus> DocumentStatuses => Set<DocumentStatus>();
     public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
+    public DbSet<DocumentHistory> DocumentHistories => Set<DocumentHistory>();
+    public DbSet<DocumentHistoryAction> DocumentHistoryActions => Set<DocumentHistoryAction>();
+    public DbSet<PermissionHistory> PermissionHistories => Set<PermissionHistory>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
         => modelBuilder.HasPostgresExtension("citext").ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

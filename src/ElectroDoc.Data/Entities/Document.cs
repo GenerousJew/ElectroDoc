@@ -19,4 +19,5 @@ public class Document
     public Company? RecipientCompany { get; set; }
 
     public DocumentFile? File { get; set; }
+    public List<DocumentHistory> DocumentHistory { get; set; } = [];
 }
